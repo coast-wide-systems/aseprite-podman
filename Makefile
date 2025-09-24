@@ -1,11 +1,17 @@
 IMAGE_NAME := aseprite-podman
+VERSION ?= v1.3.15.3
+RELEASE_DIR = output
+
+.DEFAULT_GOAL := build
+
+.PHONY: build build-image
 
 build: build-image
-	mkdir -p ${PWD}/output
-	podman run --rm \
+	@mkdir -p ./$(RELEASE_DIR)
+	@podman run --rm \
 	--tmpfs /work:rw,size=24G,mode=1777 \
-	-v ${PWD}/output:/output:z \
-	${IMAGE_NAME}
+	-v ./$(RELEASE_DIR):/output:z \
+	$(IMAGE_NAME) $(VERSION)
 
 build-image:
-	podman build -t ${IMAGE_NAME} .
+	@podman build --rm -t $(IMAGE_NAME) .
