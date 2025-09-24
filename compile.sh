@@ -1,63 +1,21 @@
-#!/bin/bash
-
-VERSION="v1.3.14.2"
+#!/usr/bin/env bash
 
 # Fail on errors
 set -e
 
-#echo "Download and compile Skia & other dependencies"
-#cd /dependencies
-#
-#if [ ! -d "/dependencies/depot_tools" ]
-#then
-#  git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-#fi
-#
-#if [ ! -d "/dependencies/skia" ]
-#then
-#  #git clone -b aseprite-m102 https://github.com/aseprite/skia.git
-#  git clone -b aseprite-m124 https://github.com/aseprite/skia.git
-#fi
-#
-#export PATH="${PWD}/depot_tools:${PATH}"
-#
-#cd skia
-#pwd
-#echo "Syncing skia dependencies"
-#python3 tools/git-sync-deps
-#
-#echo "Compiling skia"
-#update_depot_tools
-#gn gen out/Release-x64 --args="is_debug=false is_official_build=true skia_use_system_expat=false skia_use_system_icu=false skia_use_system_libjpeg_turbo=false skia_use_system_libpng=false skia_use_system_libwebp=false skia_use_system_zlib=false skia_use_sfntly=false skia_use_freetype=true skia_use_harfbuzz=true skia_pdf_subset_harfbuzz=true skia_use_system_freetype2=false skia_use_system_harfbuzz=false"
-#ninja -C out/Release-x64 skia modules
+if [[ "$1" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+	VERSION="$1"
+else
+	echo "Invalid version argument: '$1'" >&2
+	exit 1
+fi
 
 echo "Downloading Aseprite $VERSION and compiling"
-#cd /output
-
-#if [ ! -d "/output/aseprite" ]
-#then
-#  git clone --recursive https://github.com/aseprite/aseprite.git
-#fi
 
 git clone --recursive https://github.com/aseprite/aseprite.git
 cd aseprite
-git checkout tags/$VERSION
-./build.sh --auto --norun
+git checkout tags/$VERSION || { echo "Failed to checkout 'tags/$VERSION'" >&2; exit 1; }
+./build.sh --auto --norun || { echo "Aseprite build script failed" >&2; exit 1; }
 echo "Build complete, copying to /output"
-cp -R ./build/bin /output/aseprite-${VERSION/v/}
-#mkdir -p build
-#cd build
-#
-#echo "Compiling Asperite"
-#cmake \
-#  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-#  -DLAF_BACKEND=skia \
-#  -DSKIA_DIR=/dependencies/skia \
-#  -DSKIA_LIBRARY_DIR=/dependencies/skia/out/Release-x64 \
-#  -DSKIA_LIBRARY=/dependencies/skia/out/Release-x64/libskia.a \
-#  -G Ninja \
-#  ..
-#
-#echo "Linking Aseprite"
-#ninja aseprite
-echo "Done"
+cp -R ./build/bin /output/aseprite-${VERSION/v/} || { echo "Failed to copy built binaries:" >&2; ls -l ./build; exit 1; }
+echo "Done."
