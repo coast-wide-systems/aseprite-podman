@@ -1,0 +1,6 @@
+/output
+
+# IDE and editor files
+*.swp
+*.swo
+*~
