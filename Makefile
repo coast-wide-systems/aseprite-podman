@@ -1,5 +1,5 @@
 IMAGE_NAME := aseprite-podman
-VERSION ?= v1.3.15.3
+VERSION ?= v1.3.16
 RELEASE_DIR = output
 
 .DEFAULT_GOAL := build
