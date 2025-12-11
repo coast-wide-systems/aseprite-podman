@@ -15,3 +15,6 @@ build: build-image
 
 build-image:
 	@podman build --rm -t $(IMAGE_NAME) .
+
+clean:
+	@rm -r ./$(RELEASE_DIR)
