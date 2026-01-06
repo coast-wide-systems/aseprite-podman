@@ -30,3 +30,22 @@ To only build the container image, using the `build-image` target for the Makefi
 Since the image will accept the Aseprite version as a CMD argument it's not necessary to build the
 image against a specific Aseprite release, however if Aseprite introduces dependencies or changes to
 the build steps then the image & build helper script will need to be updated accordingly.
+
+### Installation
+
+The default target will leave the compiled application in the local `./output` directory. If your system uses typical XDG style directory structures for your USER you may use the following to install the application for your user only and create a .desktop shortcut:
+
+> [!WARNING]
+> Do not use `sudo`, the application will be installed for the current user only using this Makefile target; if the application needs to be installed globally it should be done using the appropriate packager or other methodology for your particular distribution and is (currently) out of the scope of this Makefile.
+
+`make install`
+
+### Uninstallation
+
+The `Makefile` inclues two options for uninstalling the application: `uninstall` and `purge`. The `uninstall` target will remove the application and its shortcut and can be invoked using:
+
+`make uninstall`
+
+If you want to remove both the application **and** its configurations then the purge target will do so:
+
+`make purge`
