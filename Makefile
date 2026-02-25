@@ -1,6 +1,6 @@
 IMAGE_NAME := aseprite-podman
 IMAGE_TAG:= latest
-VERSION ?= 1.3.16
+VERSION ?= 1.3.17
 OUTPUT_DIR = output
 APP_NAME = aseprite
 DATA_DIR = .local/share
@@ -49,4 +49,4 @@ purge: uninstall
 
 clean:
 	@rm -rf ./$(OUTPUT_DIR)
-	@podman rmi $(IMAGE_NAME):$(IMAGE_TAG) || true
+	@podman rmi $(IMAGE_NAME):$(IMAGE_TAG) 2>/dev/null || true
