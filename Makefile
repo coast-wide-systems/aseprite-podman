@@ -1,11 +1,21 @@
 IMAGE_NAME := aseprite-podman
 IMAGE_TAG:= latest
 VERSION ?= 1.3.17
+CONTAINER_RUNTIME ?= podman
 OUTPUT_DIR = output
 APP_NAME = aseprite
 DATA_DIR = .local/share
 CONF_DIR = .config
 BIN_DIR = .local/bin
+
+# Detect available container runtime if not specified
+ifeq ($(CONTAINER_RUNTIME),auto)
+    ifeq ($(shell command -v podman 2>/dev/null),)
+        CONTAINER_RUNTIME := docker
+    else
+        CONTAINER_RUNTIME := podman
+    endif
+endif
 
 .DEFAULT_GOAL := all
 
@@ -14,11 +24,11 @@ BIN_DIR = .local/bin
 all: build-image $(OUTPUT_DIR)/aseprite-$(VERSION)
 
 build-image:
-	@podman build --rm -t $(IMAGE_NAME) .
+	@$(CONTAINER_RUNTIME) build --rm -t $(IMAGE_NAME) .
 
 $(OUTPUT_DIR)/aseprite-$(VERSION):
 	@mkdir -p ./$(OUTPUT_DIR)
-	@podman run --rm \
+	@$(CONTAINER_RUNTIME) run --rm \
 	--tmpfs /work:rw,size=8G,mode=1777 \
 	-v ./$(OUTPUT_DIR):/output:z \
 	$(IMAGE_NAME) $(VERSION)
@@ -49,4 +59,4 @@ purge: uninstall
 
 clean:
 	@rm -rf ./$(OUTPUT_DIR)
-	@podman rmi $(IMAGE_NAME):$(IMAGE_TAG) 2>/dev/null || true
+	@$(CONTAINER_RUNTIME) rmi $(IMAGE_NAME):$(IMAGE_TAG) 2>/dev/null || true
