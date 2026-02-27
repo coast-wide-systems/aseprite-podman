@@ -1,10 +1,10 @@
-# Containerized podman builder for Aseprite on Linux
+# Containerized builder for Aseprite Linux
 
 A helper image to simplify compiling Aseprite for Linux. Note that, while the version can be passed as
 a runtime env var, this builder has been updated to rely on the newer Aseprite `build.sh` script and
-consequently won't work to compile legacy Aseprite releases.
+consequently won't work to compile legacy Aseprite releases (pre v1.3.16).
 
-Designed to be used with podman's rootless environment.
+Designed to be used with rootless podman, but can also work with Docker.
 
 ## Usage
 
@@ -13,13 +13,25 @@ Designed to be used with podman's rootless environment.
 The Makefile contains a default VERSION target, set to the most recent successfully built Aseprite
 release. To build this version, simply call the `make` command from the top level of this repository.
 
+### Manually specify container runtime
+
+This builder will automatically use `podman` or `docker` depending on which is available in the system
+`PATH`, defaulting to `podman` if both are installed. If you need to specify which runtime to use, you
+may override the variable `CONTAINER_RUNTIME`, eg:
+
+`make CONTAINER_RUNTIME=docker`
+
+or
+
+`make CONTAINER_RUNTIME=podman`
+
 ### Specific Aseprite release
 
 Note that due to constant changes in the Aseprite project this image may not work to compile any/all
 Aseprite releases. To force the image to target a specific version, override the VERSION env var when
 calling `make`, eg:
 
-`make VERSION=v1.3.15.3`
+`make VERSION=v1.3.16`
 
 ### Image only
 
@@ -36,7 +48,10 @@ the build steps then the image & build helper script will need to be updated acc
 The default target will leave the compiled application in the local `./output` directory. If your system uses typical XDG style directory structures for your USER you may use the following to install the application for your user only and create a .desktop shortcut:
 
 > [!WARNING]
-> Do not use `sudo`, the application will be installed for the current user only using this Makefile target; if the application needs to be installed globally it should be done using the appropriate packager or other methodology for your particular distribution and is (currently) out of the scope of this Makefile.
+> Avoid using `sudo`, the application will be installed for the current user only using this Makefile
+> target; if the application needs to be installed globally it should be done using the appropriate
+> packager or other methodology for your particular distribution and is (currently) out of the scope
+> of this Makefile.
 
 `make install`
 
