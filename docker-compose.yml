@@ -1,0 +1,13 @@
+services:
+  aseprite-builder:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: aseprite-builder
+    image: aseprite-podman:latest
+    volumes:
+      - ./output:/output:z
+    tmpfs:
+      - /work:rw,size=8G,mode=1777
+    command: "1.3.17"
+
