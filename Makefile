@@ -1,6 +1,6 @@
 IMAGE_NAME := aseprite-podman
 IMAGE_TAG:= latest
-VERSION ?= 1.3.17.1
+VERSION ?= 1.3.17.2
 OUTPUT_DIR = output
 APP_NAME = aseprite
 DATA_DIR = .local/share
