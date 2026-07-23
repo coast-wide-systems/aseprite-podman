@@ -3,7 +3,7 @@
 # Fail on errors
 set -e
 
-if [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+if [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?(-beta[0-9]+)?$ ]]; then
 	VERSION="$1"
 else
 	echo "Invalid version argument: '$1'" >&2
